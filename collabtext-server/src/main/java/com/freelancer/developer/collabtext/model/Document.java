@@ -56,4 +56,12 @@ public class Document {
     public void setSizeInBytes(Integer sizeInBytes) {
         this.sizeInBytes = sizeInBytes;
     }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
 }
