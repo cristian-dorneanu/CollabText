@@ -2,10 +2,11 @@ package com.freelancer.developer.collabtext.model;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
+import java.io.Serializable;
 import java.util.Set;
 
 @Entity
-public class User {
+public class User implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -20,6 +21,7 @@ public class User {
     @Column(name = "saved_documents")
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "user",
             orphanRemoval = true, fetch = FetchType.LAZY)
+    @Transient
     private Set<Document> savedDocuments;
 
     public Long getId() {

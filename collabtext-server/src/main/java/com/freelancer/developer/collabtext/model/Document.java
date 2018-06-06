@@ -3,11 +3,12 @@ package com.freelancer.developer.collabtext.model;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import java.io.Serializable;
 
 @Entity
-public class Document {
+public class Document implements Serializable {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
     @NotNull(message = "Specify a filename")
@@ -20,7 +21,7 @@ public class Document {
     @Column(name = "size_in_bytes")
     private Integer sizeInBytes;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinTable(name = "user_documents", joinColumns = {@JoinColumn(name = "user_id", referencedColumnName = "id")},
                     inverseJoinColumns = {@JoinColumn(name = "document_id", referencedColumnName = "id")})
     private User user;
