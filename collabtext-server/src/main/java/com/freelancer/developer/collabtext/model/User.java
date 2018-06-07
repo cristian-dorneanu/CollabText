@@ -1,5 +1,7 @@
 package com.freelancer.developer.collabtext.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
@@ -18,10 +20,8 @@ public class User implements Serializable {
     @NotNull
     private String email;
 
-    @Column(name = "saved_documents")
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "user",
-            orphanRemoval = true, fetch = FetchType.LAZY)
-    @Transient
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "user")
+    @JsonIgnoreProperties("user")
     private Set<Document> savedDocuments;
 
     public Long getId() {
@@ -48,6 +48,7 @@ public class User implements Serializable {
         this.email = email;
     }
 
+    @Transient
     public Set<Document> getSavedDocuments() {
         return savedDocuments;
     }

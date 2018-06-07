@@ -21,9 +21,10 @@ public class Document implements Serializable {
     @Column(name = "size_in_bytes")
     private Integer sizeInBytes;
 
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JoinTable(name = "user_documents", joinColumns = {@JoinColumn(name = "user_id", referencedColumnName = "id")},
-                    inverseJoinColumns = {@JoinColumn(name = "document_id", referencedColumnName = "id")})
+    @ManyToOne
+    @JoinTable(name = "user_documents",
+                joinColumns = {@JoinColumn(name = "document_id", referencedColumnName = "id")},
+                inverseJoinColumns = {@JoinColumn(name = "user_id", referencedColumnName = "id")})
     private User user;
 
     public Long getId() {
@@ -58,6 +59,7 @@ public class Document implements Serializable {
         this.sizeInBytes = sizeInBytes;
     }
 
+    @Transient
     public User getUser() {
         return user;
     }

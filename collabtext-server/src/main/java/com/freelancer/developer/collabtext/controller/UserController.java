@@ -1,11 +1,10 @@
 package com.freelancer.developer.collabtext.controller;
 
 import com.freelancer.developer.collabtext.model.User;
-import com.freelancer.developer.collabtext.repository.UserRepository;
+import com.freelancer.developer.collabtext.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.rest.webmvc.ResourceNotFoundException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -15,38 +14,32 @@ import javax.validation.Valid;
 public class UserController {
 
     @Autowired
-    UserRepository userRepository;
+    UserService userService;
 
     @GetMapping("/users")
     public Page<User> getAllUsers(Pageable pageable) {
-        return userRepository.findAll(pageable);
+        return userService.retrieveAllUsers(pageable);
     }
 
     @GetMapping("/users/{userId}")
     public User getUserById(@PathVariable Long userId) {
-        return userRepository.findById(userId)
-                .orElseThrow(() -> new ResourceNotFoundException("UserId " + userId + " not found"));
+        return userService.retrieveUserById(userId);
     }
 
     @PostMapping("/users")
-    public User createUser(@Valid @RequestBody User user) {
-        return userRepository.save(user);
+    public ResponseEntity<?> createUser(@Valid @RequestBody User user) {
+        userService.addUser(user);
+        return ResponseEntity.ok().build();
     }
 
     @PutMapping("/users/{userId}")
-    public User updateUser(@PathVariable Long userId, @Valid @RequestBody User userRequest) {
-        return userRepository.findById(userId).map(user -> {
-            user.setUsername(userRequest.getUsername());
-            user.setEmail(userRequest.getEmail());
-            return userRepository.save(user);
-        }).orElseThrow(() ->  new ResourceNotFoundException("UserId " + userId + " not found"));
+    public User updateUser(@PathVariable Long userId, @Valid @RequestBody User userToUpdate) {
+        return userService.updateUserById(userId, userToUpdate);
     }
 
     @DeleteMapping("users/{userId}")
     public ResponseEntity<?> deleteUser(@PathVariable Long userId) {
-        return userRepository.findById(userId).map(user -> {
-            userRepository.delete(user);
-            return ResponseEntity.ok().build();
-        }).orElseThrow(() -> new ResourceNotFoundException("UserId " + userId + " not found"));
+        userService.removeUserById(userId);
+        return ResponseEntity.ok().build();
     }
 }
